@@ -1,0 +1,29 @@
+name: sf_sleep
+channels:
+  - defaults
+  - conda-forge  # Additional channel, if needed
+  - pytorch
+
+dependencies:
+  - python=3.8  # Specify Python version
+
+  # List of packages with their versions
+  - pytorch
+  - tqdm
+  - torchvision
+  - torchaudio
+  - wfdb    
+  - librosa
+  - seaborn
+  - evaluate
+  - mne
+  - openpyxl
+  - pip
+  - pip:
+    - hrv-analysis
+    - samplerate
+    - biosppy
+
+  # You can also specify additional dependencies like this:
+  # - pip:
+  #   - package_name==1.2.3
