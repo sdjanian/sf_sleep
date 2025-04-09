@@ -20,9 +20,7 @@ class AllignECGandPPG:
 
     def __init__(self,dataset = "", root_folder:str = "sample_dataset", output_folder:str = "processed_data",pre_root:str = os.getcwd()):
 
-        self.dataset_name = "mesa"
         self.ecg_sampling_frequency = None
-        self.ecg_col_name = "EKG"
         self.epoch_length_in_sec = 30
         self.samples_in_ecg_epoch = None#self.ecg_sampling_frequency * self.epoch_length_in_sec
         
@@ -412,7 +410,7 @@ def GenerateAlignedECGandPPGdatasets(root_folder,generate_plots = True,save_outp
             
 if __name__ == "__main__":
 
-    root_folder = r'C:\Users\Shagen\OneDrive - Aalborg Universitet\Dokumenter\PhD\Sleep Study Dataset'
+    root_folder = r'\Sleep Study Dataset'
     #generate_plots = True
     #save_output = True
 

@@ -21,7 +21,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch import optim
 
 from deep_learning_loop_utilities import str2bool 
-from deep_learning_loop_utilities import get_train_valid_test_files_recreate,get_train_valid_test_files_recreate_small,getSubjectPaths, getSubjectPathsContinuedTraining, getSFDLECGPPGPathPairs
+from deep_learning_loop_utilities import get_train_valid_test_files_recreate,get_train_valid_test_files_recreate_small,getSubjectPaths, getSubjectPathsContinuedTraining, getAAUWSSDLECGPPGPathPairs
 from deep_learning_loop_utilities import create_datasets, getCrossEntropyWeights, get_optimzer_and_scheduler
 from deep_learning_plots import create_loss_plot, create_confusion_matrix, create_hypnograms,getDistributionOfGeneratorLabels,DistributionPlot, MetricPlots, PlotMetricDistribution, PlotClassAccuracies, createBaselineComparisonPlot
 from deep_learning_loop_utilities import calculate_metrics, gatherBatchDataToSubjectMetrics, getDataFrameOfRecordingMetric, getMetricPerEpoch
@@ -30,7 +30,7 @@ from deep_learning_loop_utilities import calculateBaselinePrClass,createBaseline
 
 from dataset_densenet import ECGDataSetSingle2
 from ecg_mask_loader_simple import ECGPeakMask2
-from data_loader_sleep_study_dataset import SFDL
+from data_loader_aauwss_sleep_study_dataset import AAUWSSDL
 from dense_net_utils import setCWDToScriptLocation, experiment_folder_path, get_weights 
 from resnet1d import ResNet1D
 from dense_net_model import create_DenseNetmodel
@@ -162,7 +162,7 @@ if __name__ == '__main__':
     parser.add_argument('-pat', '--patience',type=int,default=0,help='Amount of patience compared to validation set',dest='patience')
     parser.add_argument('-s_best', '--save_best_model',type=str2bool,default=True,help='Normalize input to neural networks',dest='save_best_model')
     parser.add_argument('-l_vs_rest', '-light_sleep_vs_all_bool',type=str2bool,default=False,help='Collapses N1 and N2 into Light Sleep and N3,REM and Wake into Not Light Sleep. Only works when sleep stages set to 2',dest='light_sleep_vs_all_bool')
-    parser.add_argument('-dset', '--data_set',type=str,default='',choices = ['sfdl','example'],help='Which dataset to use. \nsfdl = The SoundFocus dataset loader that contain ECG and PPGs ',dest='data_set') 
+    parser.add_argument('-dset', '--data_set',type=str,default='',choices = ['AAUWSS','example'],help='Which dataset to use. \nAAUWSS = The AAUWSS dataset loader that contain ECG and PPGs ',dest='data_set') 
 
 
     
@@ -282,22 +282,22 @@ if __name__ == '__main__':
         validation_dataset = create_datasets(validation_fileNames,ECGPeakMask2,shuffle_recording=False,number_of_sleep_stage=NUM_CLASSES,light_sleep_vs_all_bool=light_sleep_vs_all_bool)
         test_dataset = create_datasets(test_fileNames,ECGPeakMask2,shuffle_recording=False,number_of_sleep_stage=NUM_CLASSES,light_sleep_vs_all_bool=light_sleep_vs_all_bool)
     elif data_type == 'rawecg':
-        if data_set =='sfdl':
-            soundfocus_root_folder = r'./aligned_sleep_data_set'
+        if data_set =='AAUWSS':
+            AAUWSS_root_folder = r'./aligned_sleep_data_set'
 
             
-            paired_paths=getSFDLECGPPGPathPairs(soundfocus_root_folder)               
+            paired_paths=getAAUWSSDLECGPPGPathPairs(AAUWSS_root_folder)               
             dataset_list = []
             for subject,ecg_path,ppg_path in tqdm(paired_paths,desc='Loading ECG and PPG dataset',total=len(paired_paths)):
                 #print(ecg_path,"\n",ppg_path)
                 #print(f"Subject: {subject}, ECG File: {ecg_path}, PPG File: {ppg_path}")
-                one_subject = SFDL(file_path=(ecg_path,ppg_path),signal_source='both',mask = False,shuffle_recording=False, number_of_sleep_stage=NUM_CLASSES, normalize=normalize_data_bool, augment_data = AUGMENT_DATA,normalize_type=normalize_type,resample_frequency = resample_frequency,resample_bool=resample_data,window_size=window_size,light_sleep_vs_all_bool=light_sleep_vs_all_bool)
+                one_subject = AAUWSSDL(file_path=(ecg_path,ppg_path),signal_source='both',mask = False,shuffle_recording=False, number_of_sleep_stage=NUM_CLASSES, normalize=normalize_data_bool, augment_data = AUGMENT_DATA,normalize_type=normalize_type,resample_frequency = resample_frequency,resample_bool=resample_data,window_size=window_size,light_sleep_vs_all_bool=light_sleep_vs_all_bool)
                 if data_type == 'rawecg':
                     one_subject.getitm_output = 'ecg'
                 if data_type == 'rawppg':
                     one_subject.getitm_output = 'ppg'            
                 dataset_list.append(one_subject)
-            training_dataset = torch.utils.data.ConcatDataset(dataset_list) # Quickfix to test if train, val and test work with SFDL
+            training_dataset = torch.utils.data.ConcatDataset(dataset_list) # Quickfix to test if train, val and test work with AAUWSS
             validation_dataset = torch.utils.data.ConcatDataset(dataset_list)
             test_dataset = torch.utils.data.ConcatDataset(dataset_list)
         

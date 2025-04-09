@@ -19,27 +19,51 @@ from biosppy.signals import ecg, bvp
 
 
 
-class SFDL(ECGDataSetSingle2):
+class AAUWSSDL(ECGDataSetSingle2):
     def __init__(self, file_path,ecg_file_path:str = None,ppg_file_path:str=None, shuffle_recording = False, number_of_sleep_stage:int = 5,augment_data:bool = False,normalize:bool=True,resample_bool:bool = False,resample_frequency:int = 0,normalize_type = 'zscore',sampling_frequency=None,window_size = None,drop_initial_wake=False,light_sleep_vs_all_bool:bool = False,signal_source:str='both',mask:bool = True,trim_ends:bool=True,filter_bool:bool = False,invert_ecg_bool:bool = False):
         """
-        Loads a single pickled pandas dataframe that contains ECG signal split up into 30 second segments with a corresponding label. When loading each row is a 30 second segment and each column is a single sample.
-        This dataframe is then preprocessed to be used for a pytorch neural network. 
+        
 
         Parameters
         ----------
-        file_path : str
-            Path for the .pkl files for an ECG with sleep labels.
+        file_path : TYPE
+            DESCRIPTION.
+        ecg_file_path : str, optional
+            DESCRIPTION. The default is None.
+        ppg_file_path : str, optional
+            DESCRIPTION. The default is None.
         shuffle_recording : TYPE, optional
-            Not implemented. The default is False.
+            DESCRIPTION. The default is False.
         number_of_sleep_stage : int, optional
-            How many sleep stages to be used for classification. If other than 5 chosen, some will be collapsed. The default is 5.
+            DESCRIPTION. The default is 5.
         augment_data : bool, optional
-            Augmentation creates more sleep epochs of the sleep stages with fewer samples. It tries to create an equal distribution if possible. The default is False.
+            DESCRIPTION. The default is False.
         normalize : bool, optional
-            Normalizing the ECG signal. Normalization occurs on epoch level. The default is True.
-            
-        signal_type : str, 
-            Specifies if ecg, ppg or both signals. Default is both
+            DESCRIPTION. The default is True.
+        resample_bool : bool, optional
+            DESCRIPTION. The default is False.
+        resample_frequency : int, optional
+            DESCRIPTION. The default is 0.
+        normalize_type : TYPE, optional
+            DESCRIPTION. The default is 'zscore'.
+        sampling_frequency : TYPE, optional
+            DESCRIPTION. The default is None.
+        window_size : TYPE, optional
+            DESCRIPTION. The default is None.
+        drop_initial_wake : TYPE, optional
+            DESCRIPTION. The default is False.
+        light_sleep_vs_all_bool : bool, optional
+            DESCRIPTION. The default is False.
+        signal_source : str, optional
+            DESCRIPTION. The default is 'both'.
+        mask : bool, optional
+            DESCRIPTION. The default is True.
+        trim_ends : bool, optional
+            DESCRIPTION. The default is True.
+        filter_bool : bool, optional
+            DESCRIPTION. The default is False.
+        invert_ecg_bool : bool, optional
+            DESCRIPTION. The default is False.
 
         Returns
         -------
@@ -369,16 +393,16 @@ if __name__ == '__main__':
     
     #exit
     # Generators
-    soundfocus_root_folder = r"C:\Users\Shagen\OneDrive - Aalborg Universitet\Dokumenter\PhD\sleep_classification_software\aligned_sleep_data_set"
-    ecg_folder = os.path.join(soundfocus_root_folder,'ecg',"*")
-    ppg_folder = os.path.join(soundfocus_root_folder,'ppg',"*")
+    aauwss_root_folder = r".\aligned_sleep_data_set"
+    ecg_folder = os.path.join(aauwss_root_folder,'ecg',"*")
+    ppg_folder = os.path.join(aauwss_root_folder,'ppg',"*")
 
 
     ecg_paths = glob.glob(ecg_folder)
     ppg_paths = glob.glob(ppg_folder)
 
-    #test_peaks = SFDL(file_path=ecg_paths[-3],augment_data=False,number_of_sleep_stage=2,normalize_type='zscore',normalize=True,sampling_frequency=None,drop_initial_wake=False,signal_source='ecg',mask = False,light_sleep_vs_all_bool=True)
-    test_peaks_raw = SFDL(file_path=(ecg_paths[-1],ppg_paths[-1]),augment_data=False,number_of_sleep_stage=5,normalize_type='zscore',normalize=False,sampling_frequency=None,resample_bool = True,resample_frequency=64,drop_initial_wake=False,signal_source='both',mask = False,light_sleep_vs_all_bool=False,window_size=270)
+    #test_peaks = AAUWSSDL(file_path=ecg_paths[-3],augment_data=False,number_of_sleep_stage=2,normalize_type='zscore',normalize=True,sampling_frequency=None,drop_initial_wake=False,signal_source='ecg',mask = False,light_sleep_vs_all_bool=True)
+    test_peaks_raw = AAUWSSDL(file_path=(ecg_paths[-1],ppg_paths[-1]),augment_data=False,number_of_sleep_stage=5,normalize_type='zscore',normalize=False,sampling_frequency=None,resample_bool = True,resample_frequency=64,drop_initial_wake=False,signal_source='both',mask = False,light_sleep_vs_all_bool=False,window_size=270)
     #tp = test_peaks.processed_ECG_dataset
 
 
@@ -393,112 +417,7 @@ if __name__ == '__main__':
     abc3 =test_peaks_raw.labels
 
     
-    # import matplotlib.pyplot as plt
-    # plt.figure()
-    # fig,axes = plt.subplots(2,1,sharex=True)
-    # axes[0].plot(tpr[500][0][0:1000])
-    # axes[1].plot(tp[500][0:1000])
-    
-    
-    # #ppg_test_peaks = SFDL(ecg_file_path=ecg_paths[2],ppg_file_path=ppg_paths[2],augment_data=False,number_of_sleep_stage=2,normalize_type='zscore',normalize=True,sampling_frequency=None,resample_frequency=200,drop_initial_wake=False,signal_source='ppg',mask = True,light_sleep_vs_all_bool=True)
-    # ppg_test_peaks_raw = SFDL(ecg_file_path=ecg_paths[2],ppg_file_path=ppg_paths[2],augment_data=False,number_of_sleep_stage=2,normalize_type='zscore',normalize=False,sampling_frequency=None,resample_frequency=None,drop_initial_wake=False,signal_source='ppg',mask = False,light_sleep_vs_all_bool=True,window_size=270)
-    # #ppg_tp = ppg_test_peaks.processed_PPG_dataset
-    # ppg_tpr = ppg_test_peaks_raw.processed_PPG_dataset
-    # sample = ppg_tpr[500][0].numpy()
-    
-    # import heartpy as hp
-    # filtered_ppg = hp.filter_signal(sample, 
-    #                                 cutoff = [0.8, 2.5], 
-    #                                 filtertype = 'bandpass',
-    #                                 sample_rate = 64, 
-    #                                 order = 3,
-    #                                 return_top = False)   
-    # wd, m = hp.process(filtered_ppg, sample_rate=64,
-    #                    high_precision = True, clean_rr = True)    
-    
-    # import matplotlib.pyplot as plt
 
-    # plt.figure(figsize=(12,6))
-    # hp.plotter(wd, m)  
-    
-    # plt.figure()
-    # fig,axes = plt.subplots(2,1,sharex=True)
-    # axes[0].plot(sample)
-    # axes[1].plot(filtered_ppg)    
-    
-    
-    # peaklist_ms = np.asarray(wd['peaklist'])/64
-    # peak_indices = [round(t * 64) for t in peaklist_ms]
-    # peak_values = [filtered_ppg[i] for i in peak_indices]
-    
-    # ppg_mask = [0]*len(filtered_ppg)
-    # for i in peak_indices:
-    #     ppg_mask[i] = 1    
-    
-    # plt.figure()
-    # plt.plot(filtered_ppg)
-    # plt.plot(peak_indices,peak_values,'o',color='red',markersize=5, linestyle='None')
-    
-    
-    # ppg_mask
-    # fig,axes = plt.subplots(4,1,sharex=False)
-    # axes[0].plot(tpr[500][0][0:1000])
-    # axes[1].plot(tp[500][0:1000],'o',color='red',markersize=5, linestyle='None')
-    # axes[2].plot(filtered_ppg[0:320])
-    # axes[3].plot(ppg_mask[0:320],'o',color='red',markersize=5, linestyle='None')    
-    
-
-    # def createPPGMask(data,samples_rate,filter = True):
-    #     if filter == True:
-    #         data = hp.filter_signal(data,
-    #                                 cutoff = [0.8, 2.5], 
-    #                                 filtertype = 'bandpass',
-    #                                 sample_rate = samples_rate, 
-    #                                 order = 3,
-    #                                 return_top = False)              
-    #     wd, m = hp.process(data, sample_rate=samples_rate,
-    #                        high_precision = True, clean_rr = True)   
-        
-    #     peaklist_ms = np.asarray(wd['peaklist'])/samples_rate
-    #     peak_indices = [round(t * samples_rate) for t in peaklist_ms]        
-    #     ppg_mask = [0]*len(data)
-    #     for i in peak_indices:
-    #         ppg_mask[i] = 1            
-    #     return ppg_mask
-    # from biosppy.signals import bvp
-    # ttttt = bvp.bvp(sample,sampling_rate=64)
-    # onset = ttttt['onsets']
-    # onset_values = [sample[i] for i in onset]
-
-    # fig,axes = plt.subplots(2,1,sharex=False)
-    # axes[0].plot(sample)
-    # axes[0].plot(onset,onset_values,'o',color='red',markersize=5, linestyle='None')
-    # exit()
-
-
-    # """
-    # test = SoundFocusDatasetLoader(ecg_file_path=ecg_paths[0],augment_data=False,number_of_sleep_stage=4,normalize_type='zscore',normalize=True,sampling_frequency=256,resample_frequency=64,drop_initial_wake=True)
-    # d = test._loadPickleData(ecg_paths[0])
-    # """
-    
-    # test_1 = SFDL(ecg_file_path=ecg_paths[2],ppg_file_path=ppg_paths[2],augment_data=False,number_of_sleep_stage=2,normalize_type='zscore',normalize=True,sampling_frequency=None,resample_frequency=64,drop_initial_wake=False,signal_source='both',mask = False,light_sleep_vs_all_bool=True)
-    # #test_1.signal_source_preparation_routine()
-    
-    # x = test_1.processed_ECG_dataset
-    # y = test_1.ecg_labels
-    # x_ppg = test_1.processed_PPG_dataset
-    # y_ppg = test_1.ppg_labels
-    # #d1 = test_1._prepareECG()
-    # #test_2 = SFDL(ecg_file_path=ppg_paths[2],augment_data=False,number_of_sleep_stage=5,normalize_type='zscore',normalize=True,sampling_frequency=64,resample_frequency=64,drop_initial_wake=False,signal_source='ecg',mask = True)
-    # #d2 = test_2._prepareECG()
-    
-    # t = test_1.__getitem__(10)
-    # #torch.utils.data.DataLoader(training_dataset,batch_size=batch_size,sampler=sampler)
-
-    # exit()
- 
-
-    
     
     
     

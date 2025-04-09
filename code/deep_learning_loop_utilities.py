@@ -9,8 +9,6 @@ from sklearn.metrics import accuracy_score, f1_score, cohen_kappa_score
 import sys
 sys.path.append('..\data_loader')
 sys.path.append('..\ecg_respiration_sleep_staging-master')
-sys.path.append('/home/cs.aau.dk/fq73oo/data_loader/ecg_respiration_sleep_staging-master/training_code_still_messy')
-sys.path.append('/home/cs.aau.dk/fq73oo/data_loader')
 from tqdm import tqdm
 import random
 from collections import Counter
@@ -377,9 +375,9 @@ def createBaselineAndPerformanceDf(metric_per_epoch:dict,baselines:dict,model_na
     return df_long
     
 
-def getSFDLECGPPGPathPairs(soundfocus_root_folder):
-    ecg_folder = os.path.join(soundfocus_root_folder,'ecg',"*")
-    ppg_folder = os.path.join(soundfocus_root_folder,'ppg',"*")
+def getAAUWSSDLECGPPGPathPairs(aauwss_root_folder):
+    ecg_folder = os.path.join(aauwss_root_folder,'ecg',"*")
+    ppg_folder = os.path.join(aauwss_root_folder,'ppg',"*")
     ecg_paths = glob.glob(ecg_folder)
     ppg_paths = glob.glob(ppg_folder)
     ecg_dict = {os.path.basename(file).split('_')[1]: file for file in ecg_paths}
