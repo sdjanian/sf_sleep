@@ -1,5 +1,5 @@
 # SoundFocus Sleep
-This is the GitHub repo for the paper "PAPER TITLE". It contains the training code for the deep learning sleep classification model along side the Aalborg University Wearable Sleep Study (AAUWSS) dataset.
+This is the GitHub repo for the paper "Towards Real-Time Sleep Stage Classification: A Deep Learning Approach Leveraging PPG and ECG". It contains the training code for the deep learning sleep classification model along side the processing for Aalborg University Wearable Sleep Study (AAUWSS) dataset.
 
 # How to use
 
