@@ -1,17 +1,17 @@
 # SoundFocus Sleep
-This is the GitHub repo for the paper "Towards Real-Time Sleep Stage Classification: A Deep Learning Approach Leveraging PPG and ECG". It contains the training code for the deep learning sleep classification model along side the processing for Aalborg University Wearable Sleep Study (AAUWSS) dataset.
+This is the GitHub repo for the publication [Djanian, S., Nielsen, T. D., Nielsen, S. H., & Bruun, A. (2026). Towards real-time sleep stage classification: A deep learning approach leveraging PPG and ECG. Physiological measurement, 10.1088/1361-6579/ae5458](https://iopscience.iop.org/article/10.1088/1361-6579/ae5458). It contains the training code for the deep learning sleep classification model alongside the processing for the AAUWSS dataset [Djanian, S., Nielsen, T. D., Nielsen, S. H., & Bruun, A. (2025). Aalborg University Wearable Sleep Study (AAUWSS) [Data set]. In Physiological Measurement (1.1). Zenodo. https://doi.org/10.5281/zenodo.16919071](https://doi.org/10.5281/zenodo.16919071).
 
 # How to use
 
 ## Datasets
-The full model was trained on the MESA dataset which be accessed [here](https://sleepdata.org/datasets/mesa) and the AAUWSS dataset can be downloaded from [here](). An example data set for this was created and stored in the folder "example_data" which contains small snipets of randomized data in the correct format for testing the code.
+The full model was trained on the MESA dataset which be accessed [here](https://sleepdata.org/datasets/mesa) and the AAUWSS dataset can be downloaded from [here](https://doi.org/10.5281/zenodo.16919071). An example data set for this was created and stored in the folder "example_data" which contains small snipets of randomized data in the correct format for testing the code.
 ## Preprocessing
 ### MESA dataset
 To extract the raw ECG and sleep staging labels from the MESA dataset use `preprocessing/data_loader_class.py` to combine the .edf files with the annotation and create pickle files in the format "epoch x samples+label". For a dataset recorded at 256 Hz with a 100 sleep epochs it creates a pandas DataFrame and stores it as a (100,7681) pickle file.
 ### Binary ECG
 To create a binary mask of the peaks in the ECG signal as used in [Sun, H., Ganglberger, W., Panneerselvam, E., Leone, M.J., Quadri, S.A., Goparaju, B., Tesh, R.A., Akeju, O., Thomas, R.J. and Westover, M.B., 2020. Sleep staging from electrocardiography and respiration with deep learning. Sleep, 43(7), p.zsz306.](https://academic.oup.com/sleep/article/43/7/zsz306/5682785) we modified their code which is available at [github.com/bdsp-core/ecg_respiration_sleep_staging](https://github.com/bdsp-core/ecg_respiration_sleep_staging). The modified code that generates binary masks from the output of `preprocessing/data_loader_class.py` is `preprocessing/create_mask_pickles.py`.
 
-### Alligned SoundFocus data
+### Aligned SoundFocus data
 If the folder "aligned_sleep_data_set" does not exist it can be prepared using `preprocessing/aauwss_sleep_dataset_alignment.py` if the dataset has already been downloaded and stored as "Sleep Study Dataset". This synchronizes the ECG from the .edf files with the PPG from the Empatica sensor.
 
 ## Installing environment
